@@ -1,0 +1,22 @@
+{
+  "name": "shell-e",
+  "version": "0.0.0",
+  "description": "execute commands remotely",
+  "main": "index.mjs",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "exports": {
+    ".": "./index.mjs",
+    "./client": "./lib/client/index.mjs",
+    "./server": "./lib/server/index.mjs",
+    "./commands": "./session-commands.mjs"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.19.2",
+    "shelly": "^0.0.3",
+    "ws": "^8.17.0"
+  }
+}
