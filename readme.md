@@ -97,3 +97,5 @@ client.session("bash", { sessionCommand: SCREEN });
 ```shell
 screen -r $SESSION_ID
 ```
+
+## Zip Extension
