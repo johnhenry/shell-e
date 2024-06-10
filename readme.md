@@ -1,6 +1,8 @@
 # Shell-E
 
-Execute commands remotely
+<img src="./extension/images/icons/logo_1024.png" style="width:128px; height:128px">
+
+Execute shell commands remotely from within a javascript application.
 
 ## CLI
 
