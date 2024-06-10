@@ -2,9 +2,29 @@
 
 Execute commands remotely
 
-## Usage
+## CLI
 
-### Server
+### Installation
+
+```shell
+npm install -g shell-e
+```
+
+### Usage
+
+```shell
+shell-e serve
+```
+
+## Library
+
+### Installation
+
+```shell
+npm install -g shell-e
+```
+
+### Usage
 
 Create a server on a given port to listen for connections.
 
