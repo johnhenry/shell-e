@@ -11,7 +11,7 @@ Create a server on a given port to listen for connections.
 ```javascript
 import Server from "shell-e/server.mjs";
 const server = new Server();
-server.listen(8080);
+server.listen(8085);
 ```
 
 ### Client#exec
@@ -32,7 +32,7 @@ It takes as a first argument a command to be run in the shell. It cannot be blan
 
 ```javascript
 import Client from "shell-e/client";
-const client = new Client(`http://localhost:8080`);
+const client = new Client(`http://localhost:8085`);
 const remote = client.exec("bash");
 
 // Print stdout
@@ -66,7 +66,7 @@ It optionally takes as its second argument an options object:
 
 ```javascript
 import Client from "shell-e/client";
-const client = new Client(`http://localhost:8080`);
+const client = new Client(`http://localhost:8085`);
 console.log(`SESSION_ID=${await client.session("bash")}`);
 ```
 

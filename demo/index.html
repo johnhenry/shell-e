@@ -1,0 +1,38 @@
+<html>
+  <header>
+    <title>Client Execute</title>
+  </header>
+  <script type="module">
+    import { Client } from "http://localhost:8085";
+    const client = await new Client();
+    const remote = await client.exec(`bash`);
+    setTimeout(async () => {
+      for await (const output of remote.stdout) {
+        console.log(output);
+      }
+    }, 1000);
+    setTimeout(async () => {
+      for await (const output of remote.stderr) {
+        console.error(output);
+      }
+    });
+    remote.stdin("ls -la\n");
+    remote.stdin("pwd\n");
+    remote.stdin("echo $USER\n");
+    remote.stdin("echo $a\n");
+  </script>
+  <script type="module">
+    import { Client } from "http://localhost:8085";
+    import { SCREEN } from "http://localhost:8085/session-commands.mjs";
+    const SESSION_ID = "session-1";
+    const client = await new Client();
+    const shellCommand = `vim`;
+    console.log(
+      `SESSION_ID=${await client.session(shellCommand, {
+        sessionCommand: SCREEN,
+        sessionId: SESSION_ID,
+      })}`
+    );
+  </script>
+  <body></body>
+</html>

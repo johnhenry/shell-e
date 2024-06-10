@@ -1,0 +1,27 @@
+{
+  "manifest_version": 3,
+  "name": "Shell-E",
+  "version": "0.0.1",
+  "description": "Access local shell from within the browser!",
+  "permissions": [
+    "storage"
+  ],
+  "options_page": "views/options.html",
+  "icons": {
+    "16": "images/icons/logo_16.png",
+    "32": "images/icons/logo_32.png",
+    "48": "images/icons/logo_48.png",
+    "64": "images/icons/logo_64.png",
+    "128": "images/icons/logo_128.png"
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "<all_urls>"
+      ],
+      "js": [
+        "content.mjs"
+      ]
+    }
+  ]
+}

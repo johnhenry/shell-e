@@ -1,0 +1,14 @@
+main {
+  display: flex;
+  align-items: start;
+  justify-content: space-evenly;
+  flex-direction: column;
+  @media (orientation: landscape) {
+    flex-direction: row;
+  }
+}
+form {
+  label {
+    display: block;
+  }
+}
