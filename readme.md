@@ -99,3 +99,8 @@ screen -r $SESSION_ID
 ```
 
 ## Zip Extension
+
+```shell
+cd extensions
+zip -r extension.zip *
+```
