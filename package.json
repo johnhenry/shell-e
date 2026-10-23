@@ -1,10 +1,10 @@
 {
-  "name": "shell-e",
-  "version": "0.0.1",
+  "name": "@johnhenry/shell-e",
+  "version": "0.1.0",
   "description": "Execute shell commands remotely from within a javascript application.",
   "main": "index.mjs",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "node --test test/smoke.test.mjs",
     "start": "node ./exec/run.mjs"
   },
   "bin": {
@@ -16,12 +16,26 @@
     "./server": "./lib/server/index.mjs",
     "./commands": "./lib/client/session-commands.mjs"
   },
-  "author": "",
-  "license": "ISC",
   "dependencies": {
     "express": "^4.19.2",
     "shelly": "^0.0.3",
     "ws": "^8.17.0",
     "yargs": "^17.7.2"
+  },
+  "author": "John Henry",
+  "license": "MIT",
+  "engines": {
+    "node": ">=22"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/johnhenry/shell-e.git"
+  },
+  "bugs": {
+    "url": "https://github.com/johnhenry/shell-e/issues"
+  },
+  "homepage": "https://github.com/johnhenry/shell-e#readme",
+  "publishConfig": {
+    "access": "public"
   }
 }

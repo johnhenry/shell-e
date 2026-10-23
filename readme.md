@@ -2,6 +2,10 @@
 
 <img src="./extension/images/icons/logo_1024.png" style="width:128px; height:128px">
 
+> Previously published as `shell-e` (unscoped, up to 0.0.1). Versions continue here as `@johnhenry/shell-e`; the `shell-e` command name is unchanged.
+
+> **Security:** the server executes arbitrary shell commands for any client that can reach it, with no authentication. See [Security](#security).
+
 Execute shell commands remotely from within a javascript application.
 
 ## CLI
@@ -9,7 +13,7 @@ Execute shell commands remotely from within a javascript application.
 ### Installation
 
 ```shell
-npm install -g shell-e
+npm install -g @johnhenry/shell-e
 ```
 
 ### Usage
@@ -23,7 +27,7 @@ shell-e serve
 ### Installation
 
 ```shell
-npm install -g shell-e
+npm install -g @johnhenry/shell-e
 ```
 
 ### Usage
@@ -31,7 +35,7 @@ npm install -g shell-e
 Create a server on a given port to listen for connections.
 
 ```javascript
-import Server from "shell-e/server.mjs";
+import Server from "@johnhenry/shell-e/server";
 const server = new Server();
 server.listen(8085);
 ```
@@ -53,7 +57,7 @@ It takes as a first argument a command to be run in the shell. It cannot be blan
 - **alive**: True if the process is running; otherwise, false.
 
 ```javascript
-import Client from "shell-e/client";
+import Client from "@johnhenry/shell-e/client";
 const client = new Client(`http://localhost:8085`);
 const remote = client.exec("bash");
 
@@ -87,7 +91,7 @@ It optionally takes as its second argument an options object:
 - **option.sessionId**: ID of the session. If not passed, a random string is generated.
 
 ```javascript
-import Client from "shell-e/client";
+import Client from "@johnhenry/shell-e/client";
 const client = new Client(`http://localhost:8085`);
 console.log(`SESSION_ID=${await client.session("bash")}`);
 ```
@@ -97,7 +101,7 @@ console.log(`SESSION_ID=${await client.session("bash")}`);
 For more information, visit [tmux](https://github.com/tmux/tmux/wiki).
 
 ```javascript
-import { TMUX } from "shell-e/commands";
+import { TMUX } from "@johnhenry/shell-e/commands";
 //...
 client.session("bash", { sessionCommand: TMUX });
 ```
@@ -111,7 +115,7 @@ tmux attach-session -t $SESSION_ID
 For more information, visit [GNU Screen](https://www.gnu.org/software/screen/).
 
 ```javascript
-import { SCREEN } from "shell-e/commands";
+import { SCREEN } from "@johnhenry/shell-e/commands";
 //...
 client.session("bash", { sessionCommand: SCREEN });
 ```
@@ -126,3 +130,7 @@ screen -r $SESSION_ID
 cd extensions
 zip -r extension.zip *
 ```
+
+## Security
+
+`shell-e serve` starts a server that runs shell commands on behalf of whoever connects to it. As shipped it has no authentication or authorization, no TLS and no origin check, and it listens on all network interfaces. Only run it on a trusted machine and network, preferably behind a firewall or an authenticated tunnel, and never expose it to the internet. See the pull request that introduced this section for the details.

@@ -14,7 +14,7 @@ Visit the [Chrome Web Store](https://chrome.google.com/webstore/detail/shell-e/l
 ### Install server
 
 ```shell
-npm install --global shell-e
+npm install --global @johnhenry/shell-e
 ```
 
 ### Start server
