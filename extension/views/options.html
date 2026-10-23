@@ -13,13 +13,22 @@
           <h1>Shell-E: Options</h1>
         </header>
         <form>
-          <lable>
+          <label>
             Server Address: <input id="server" name="server" title="server" />
-          </lable>
+          </label>
+          <label>
+            Token: <input id="token" name="token" title="token" type="password" autocomplete="off" />
+          </label>
+          <label>
+            Extra sites (one origin per line, e.g. https://example.com). Localhost is always enabled.
+            <textarea id="sites" name="sites" rows="4"></textarea>
+          </label>
           <label>
             Active <input title="on" id="on" type="checkbox" name="on" />
           </label>
-          <button id="button-save" type="button" id="button-save">Save</button>
+          <p>Start the server with: <code id="allow-hint"></code></p>
+          <button id="button-save" type="button">Save</button>
+          <p id="message" role="status"></p>
         </form>
       </section>
     </main>

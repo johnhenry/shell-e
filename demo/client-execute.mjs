@@ -1,7 +1,8 @@
 import { Client } from "../lib/client/index.mjs";
 import { PORT } from "./settings.mjs";
 const ADDRESS = `http://localhost:${PORT}`;
-const client = await new Client(ADDRESS);
+// Token is printed by `shell-e serve` / demo/server.mjs; pass it via env.
+const client = new Client(ADDRESS, { token: process.env.SHELL_E_TOKEN });
 const remote = await client.exec(`bash`);
 setTimeout(async () => {
   for await (const output of remote.stdout) {

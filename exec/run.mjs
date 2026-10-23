@@ -20,6 +20,21 @@ yargs(hideBin(process.argv))
           default: false,
           type: "boolean",
         })
+        .option("host", {
+          describe: "Interface to bind. Default is loopback; anything else prints a warning.",
+          default: "127.0.0.1",
+          type: "string",
+        })
+        .option("token", {
+          describe: "Auth token required on every request. Default: env SHELL_E_TOKEN, else a random per-run token printed at startup.",
+          type: "string",
+        })
+        .option("allow-origin", {
+          describe: "Browser Origin allowed to connect (repeatable), e.g. chrome-extension://<id>. Default: none.",
+          type: "array",
+          string: true,
+          default: [],
+        })
         .option("port", {
           alias: "p",
           describe: "server port",
@@ -68,20 +83,22 @@ yargs(hideBin(process.argv))
           type: "boolean",
         })
     },(argv)=>{
-      const {verbose, port} = argv;
+      const { verbose, port, host, token } = argv;
+      const allowedOrigins = argv.allowOrigin || [];
       if(argv.env){
         argv.env = argv.env.reduce((acc, item) => {
-        const [key, value] = item.split("=");
-        acc[key] = value;
-        return acc;
+          const i = String(item).indexOf("=");
+          acc[String(item).slice(0, i)] = String(item).slice(i + 1);
+          return acc;
         }, {});
       }
-      argv.cwd = argv.cwd || argv._[1];
-      delete argv.verbose;
-      delete argv.v;
-      delete argv.port;
-      delete argv.p;
-      const server = new Server({ verbose, port }, argv);
+      const cwd = argv.cwd || argv._[1];
+      const EXEC_KEYS = ["env","encoding","shell","timeout","maxBuffer","killSignal","uid","gid","windowsHide"];
+      const execOptions = Object.fromEntries(
+        EXEC_KEYS.filter((k) => argv[k] !== undefined).map((k) => [k, argv[k]])
+      );
+      if (cwd) execOptions.cwd = cwd;
+      const server = new Server({ verbose, port, host, token, allowedOrigins }, execOptions);
       server.listen();
     })
   .demandCommand(1, `try: ${NAME} serve`)

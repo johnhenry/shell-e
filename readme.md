@@ -18,6 +18,24 @@ npm install -g shell-e
 shell-e serve
 ```
 
+On startup it prints the address and a random token. Options:
+
+- `--host` (default `127.0.0.1`): interface to bind. Non-loopback prints a warning.
+- `--port` (default `8085`)
+- `--token`: use a fixed token instead (also `SHELL_E_TOKEN`).
+- `--allow-origin <origin>` (repeatable): browser origins allowed to connect. Default none.
+
+## Security
+
+shell-e runs shell commands sent by its clients. That is its purpose, so treat access to it as a shell on your machine.
+
+- **Loopback only by default.** `--host`/`host` can change it, with a warning. There is no TLS; if you bind elsewhere, put it behind something that provides TLS and network access control.
+- **Token on every request**, HTTP and WebSocket, compared in constant time. The token is random per run unless you set it. It is sent as `Authorization: Bearer <token>` for HTTP and as `?token=` for WebSocket (browsers cannot set headers on WebSockets), so keep it out of logs and shared URLs.
+- **Strict `Origin` allowlist**, default empty. A cross-origin web page cannot connect even if it knows the token. Non-browser clients send no `Origin` and rely on the token. CORS only ever echoes an exact allowlisted origin. On a loopback bind, unknown `Host` headers are rejected (DNS rebinding).
+- **Sessions** (`tmux`/`screen`) are launched with argument arrays, never a shell string; session ids must match `^[A-Za-z0-9._-]{1,64}$` and must not start with `-`.
+- **`exec` / the shell command itself runs arbitrary commands as the server's user, by design.** It is available only to authenticated clients from allowed origins. Anyone holding the token can do anything you can.
+- The browser extension limits where it runs and keeps the token in its background worker; see [extension/readme.md](./extension/readme.md).
+
 ## Library
 
 ### Installation
@@ -31,9 +49,14 @@ npm install -g shell-e
 Create a server on a given port to listen for connections.
 
 ```javascript
-import Server from "shell-e/server.mjs";
-const server = new Server();
+import { Server } from "shell-e/server";
+const server = new Server({
+  // host: "127.0.0.1",        // default
+  // token: "…",               // default: SHELL_E_TOKEN, else random
+  // allowedOrigins: [],       // default: none
+});
 server.listen(8085);
+console.log(server.token); // give this to clients
 ```
 
 ### Client#exec
@@ -54,7 +77,7 @@ It takes as a first argument a command to be run in the shell. It cannot be blan
 
 ```javascript
 import Client from "shell-e/client";
-const client = new Client(`http://localhost:8085`);
+const client = new Client(`http://127.0.0.1:8085`, { token });
 const remote = client.exec("bash");
 
 // Print stdout
@@ -83,12 +106,12 @@ It takes as its first argument a command as a string, which may be blank, null, 
 
 It optionally takes as its second argument an options object:
 
-- **option.sessionCommand**: The command used to create a session. Defaults to `SESSION.TMUX`.
-- **option.sessionId**: ID of the session. If not passed, a random string is generated.
+- **option.sessionCommand**: `TMUX` (`"tmux"`, default) or `SCREEN` (`"screen"`). Other values are rejected.
+- **option.sessionId**: ID of the session; must match `^[A-Za-z0-9._-]{1,64}$`. If not passed, the server generates one.
 
 ```javascript
 import Client from "shell-e/client";
-const client = new Client(`http://localhost:8085`);
+const client = new Client(`http://127.0.0.1:8085`, { token });
 console.log(`SESSION_ID=${await client.session("bash")}`);
 ```
 
@@ -123,6 +146,7 @@ screen -r $SESSION_ID
 ## Zip Extension
 
 ```shell
-cd extensions
+node scripts/sync-extension.mjs   # refresh the bundled client
+cd extension
 zip -r extension.zip *
 ```

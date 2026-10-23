@@ -1,12 +1,15 @@
 {
   "manifest_version": 3,
   "name": "Shell-E",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "description": "Access local shell from within the browser!",
-  "permissions": [
-    "storage"
-  ],
+  "permissions": ["storage", "scripting"],
+  "optional_host_permissions": ["http://*/*", "https://*/*"],
   "options_page": "views/options.html",
+  "background": {
+    "service_worker": "background.mjs",
+    "type": "module"
+  },
   "icons": {
     "16": "images/icons/logo_16.png",
     "32": "images/icons/logo_32.png",
@@ -16,12 +19,8 @@
   },
   "content_scripts": [
     {
-      "matches": [
-        "<all_urls>"
-      ],
-      "js": [
-        "content.mjs"
-      ]
+      "matches": ["http://localhost/*", "http://127.0.0.1/*"],
+      "js": ["content.mjs"]
     }
   ]
 }
