@@ -1,13 +1,28 @@
 # Shell-E Browser Extension
 
-Note, this will only work in secure contexts
+## Security model
 
-- https://\*
-- localhost:\*
+The extension is a bridge from web pages to a shell on your machine, so it is
+locked down:
+
+- It only injects its content script on `http://localhost/*` and
+  `http://127.0.0.1/*`. Any other site must be added by you in the options page,
+  which asks the browser for that one origin's permission (the manifest
+  declares `http(s)://*/*` only as _optional_ host permissions, so nothing is
+  granted until you approve it). That is the minimum the feature allows: pages
+  can only drive the shell if the extension can run on them.
+- All server traffic happens in the extension's background worker, not in the
+  page. The server therefore sees the origin `chrome-extension://<id>`, which
+  you must allow explicitly. No code is fetched from the server; the client
+  library is bundled in `vendor/` (regenerate with `node scripts/sync-extension.mjs`).
+- Every request carries the server's token, which you paste into the options
+  page. Treat it like a password.
+- Any page on a site you enabled can run commands as you while the extension is
+  switched on. Only enable sites you fully trust, and switch it off when unused.
 
 ## Install Extension
 
-Visit the [Chrome Web Store](https://chrome.google.com/webstore/detail/shell-e/ld) to install browser extension, or load the unpacked extension from the `extension` directory.
+Load the unpacked extension from the `extension` directory.
 
 ## Set up server
 
@@ -19,9 +34,15 @@ npm install --global shell-e
 
 ### Start server
 
+The options page shows the exact command, which looks like this:
+
 ```shell
-shell-e serve
+shell-e serve --allow-origin chrome-extension://<extension-id>
 ```
+
+The server prints a random token on startup. Paste it, and the server address
+(default `http://127.0.0.1:8085`), into the options page and tick "Active".
+You can pin the token instead with `--token` or the `SHELL_E_TOKEN` environment variable.
 
 ## Browser Interaction
 
